@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model ejercicios {
+  id                  Int       @id @default(autoincrement())
+  pauta_id            Int?
+  nombre              String    @db.VarChar(255)
+  series_repeticiones String?   @db.VarChar(255)
+  cargas_kg           String?
+  observaciones       String?
+  video_url           String?
+  orden               Int?      @default(0)
+  created_at          DateTime? @default(now()) @db.Timestamp(6)
+  pautas              pautas?   @relation(fields: [pauta_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  exercise_logs       exercise_logs[]
+}
+
+model pautas {
+  id                  Int                   @id @default(autoincrement())
+  titulo              String                @db.VarChar(255)
+  mes                 String                @db.VarChar(50)
+  anio                Int
+  descripcion         String?
+  calentamiento       String?
+  created_at          DateTime?             @default(now()) @db.Timestamp(6)
+  updated_at          DateTime?             @default(now()) @db.Timestamp(6)
+  ejercicios          ejercicios[]
+  routine_assignments routine_assignments[]
+}
+
+model students {
+  id                  Int                   @id @default(autoincrement())
+  name                String                @db.VarChar(255)
+  contact             String?               @db.VarChar(255)
+  goal                String?
+  status              String                @default("active") @db.VarChar(50)
+  created_at          DateTime              @default(now()) @db.Timestamp(6)
+  routine_assignments routine_assignments[]
+  workout_logs        workout_logs[]
+}
+
+model routine_assignments {
+  id         Int       @id @default(autoincrement())
+  routine_id Int
+  student_id Int
+  starts_at  DateTime? @db.Timestamp(6)
+  status     String    @default("active") @db.VarChar(50)
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  pautas     pautas    @relation(fields: [routine_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  students   students  @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([routine_id, student_id, status], name: "unique_active_assignment")
+  workout_logs workout_logs[]
+}
+
+model workout_logs {
+  id            Int                  @id @default(autoincrement())
+  student_id    Int
+  assignment_id Int
+  date          DateTime             @db.Date
+  notes         String?
+  completed     Boolean              @default(false)
+  created_at    DateTime             @default(now()) @db.Timestamp(6)
+  students      students             @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  assignment    routine_assignments  @relation(fields: [assignment_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  exercise_logs exercise_logs[]
+}
+
+model exercise_logs {
+  id              Int          @id @default(autoincrement())
+  workout_log_id  Int
+  exercise_id     Int
+  set_number      Int
+  reps_completed  Int?
+  weight_kg       Decimal?     @db.Decimal(6, 2)
+  rpe             Int?
+  notes           String?
+  created_at      DateTime     @default(now()) @db.Timestamp(6)
+  workout_log     workout_logs @relation(fields: [workout_log_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  ejercicios      ejercicios   @relation(fields: [exercise_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
