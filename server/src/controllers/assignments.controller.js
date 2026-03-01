@@ -7,7 +7,7 @@ const AppError = require('../helpers/AppError');
 
 async function create(req, res) {
   try {
-    const assignment = await assignmentsService.create(req.body);
+    const assignment = await assignmentsService.create(req.body, req.user.id);
     res.status(201).json(assignment);
   } catch (err) {
     handleError(res, err);
@@ -16,7 +16,7 @@ async function create(req, res) {
 
 async function getByStudent(req, res) {
   try {
-    const assignments = await assignmentsService.getByStudent(req.params.studentId);
+    const assignments = await assignmentsService.getByStudent(req.params.studentId, req.user.id);
     res.json(assignments);
   } catch (err) {
     handleError(res, err);

@@ -13,6 +13,8 @@ function StudentForm() {
     name: '',
     contact: '',
     goal: '',
+    peso_kg: '',
+    estatura_cm: '',
     status: 'active',
   });
   const [loading, setLoading] = useState(false);
@@ -30,6 +32,8 @@ function StudentForm() {
         name: data.name || '',
         contact: data.contact || '',
         goal: data.goal || '',
+        peso_kg: data.peso_kg != null ? data.peso_kg : '',
+        estatura_cm: data.estatura_cm != null ? data.estatura_cm : '',
         status: data.status || 'active',
       });
     } catch (error) {
@@ -56,6 +60,8 @@ function StudentForm() {
         name: form.name.trim(),
         contact: form.contact.trim() || null,
         goal: form.goal.trim() || null,
+        peso_kg: form.peso_kg !== '' ? Number(form.peso_kg) : null,
+        estatura_cm: form.estatura_cm !== '' ? Number(form.estatura_cm) : null,
         status: form.status,
       };
 
@@ -111,6 +117,31 @@ function StudentForm() {
               <option value="active">Activo</option>
               <option value="inactive">Inactivo</option>
             </select>
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label>Peso (kg)</label>
+            <input
+              type="number"
+              step="0.1"
+              min="0"
+              value={form.peso_kg}
+              onChange={(e) => handleChange('peso_kg', e.target.value)}
+              placeholder="Ej: 65.5"
+            />
+          </div>
+          <div className="form-group">
+            <label>Estatura (cm)</label>
+            <input
+              type="number"
+              step="0.1"
+              min="0"
+              value={form.estatura_cm}
+              onChange={(e) => handleChange('estatura_cm', e.target.value)}
+              placeholder="Ej: 170"
+            />
           </div>
         </div>
 

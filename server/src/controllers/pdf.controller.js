@@ -8,7 +8,7 @@ const AppError = require('../helpers/AppError');
 
 async function generatePdf(req, res) {
   try {
-    const pauta = await pautasService.getById(req.params.pautaId);
+    const pauta = await pautasService.getById(req.params.pautaId, req.user.id);
 
     const safeTitle = pauta.titulo.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
     const filename  = `pauta_${safeTitle}_${pauta.mes}_${pauta.anio}.pdf`;

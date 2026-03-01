@@ -801,6 +801,16 @@ a {
     font-size: 0.8rem;
   }
 
+  .navbar__user {
+    border-left: none;
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .navbar__user-name {
+    display: none;
+  }
+
   .students-grid {
     grid-template-columns: 1fr;
   }
@@ -953,6 +963,99 @@ a {
   max-height: 260px;
 }
 
+/* ============ LOGIN PAGE ============ */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, #1a252f 100%);
+  padding: 1rem;
+}
+
+.login-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 460px;
+  overflow: hidden;
+}
+
+.login-card__header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+}
+
+.login-card__icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.login-card__header h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.login-card__header p {
+  opacity: 0.85;
+  font-size: 0.95rem;
+}
+
+.login-card__form {
+  padding: 2rem;
+}
+
+.login-card__submit {
+  width: 100%;
+  justify-content: center;
+  padding: 12px;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+.login-card__toggle {
+  padding: 0 2rem 2rem;
+  text-align: center;
+}
+
+.login-card__toggle .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ============ NAVBAR USER ============ */
+.navbar__user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
+  padding-left: 0.75rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.navbar__user-name {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.navbar__link--logout {
+  background: rgba(231, 76, 60, 0.6) !important;
+  padding: 6px 10px !important;
+}
+
+.navbar__link--logout:hover {
+  background: var(--accent) !important;
+}
+
 @media (max-width: 768px) {
   .workout-actions {
     flex-direction: column;
@@ -971,5 +1074,356 @@ a {
     min-width: 50px;
     padding: 4px 6px;
     font-size: 0.8rem;
+  }
+
+  .navbar__user-name {
+    display: none;
+  }
+}
+
+/* ============ ACCOUNT SECTION (StudentDetail) ============ */
+.account-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.account-info__data {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.account-form {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.account-form__hint {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-top: 0.75rem;
+  line-height: 1.4;
+}
+
+/* ============ STUDENT DASHBOARD ============ */
+.student-dashboard {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.sd-header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  border-radius: var(--radius);
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sd-header__info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sd-header__avatar {
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.sd-header h1 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.sd-header__profesor {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.sd-header__stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.sd-stat {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Stats row */
+.sd-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sd-stat-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.sd-stat-card__icon {
+  font-size: 1.5rem;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.sd-stat-card__value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.sd-stat-card__label {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-top: 0.25rem;
+}
+
+/* Sections */
+.sd-section {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+}
+
+.sd-section__title {
+  font-size: 1.1rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Pauta cards */
+.sd-pautas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sd-pauta-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.sd-pauta-card__header {
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg);
+  transition: background 0.15s;
+}
+
+.sd-pauta-card__header:hover {
+  background: #e8ebef;
+}
+
+.sd-pauta-card__header h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.sd-pauta-card__date {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.sd-pauta-card__body {
+  padding: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.sd-pauta-card__desc {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.sd-pauta-card__warmup {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+/* Exercise items in pauta */
+.sd-exercises-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sd-exercise-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+}
+
+.sd-exercise-item__number {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.sd-exercise-item__info h4 {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+}
+
+.sd-exercise-item__sets {
+  color: var(--info);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.sd-exercise-item__load {
+  color: var(--success);
+  font-size: 0.8rem;
+}
+
+.sd-exercise-item__obs {
+  color: var(--text-light);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.sd-exercise-item__video {
+  font-size: 0.8rem;
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* Session cards */
+.sd-sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sd-session-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+}
+
+.sd-session-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sd-session-card__header h4 {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.sd-session-card__date {
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.sd-session-card__meta {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.sd-session-card__notes {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-top: 0.4rem;
+  font-style: italic;
+}
+
+/* Progress */
+.sd-progress-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.sd-progress-detail {
+  margin-top: 1rem;
+}
+
+.sd-progress-detail h3 {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Badge info */
+.badge--info {
+  background: var(--info);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .sd-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sd-stats-row {
+    grid-template-columns: 1fr;
+  }
+
+  .account-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .account-form .form-row {
+    flex-direction: column;
   }
 }

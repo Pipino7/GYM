@@ -7,7 +7,7 @@ const AppError = require('../helpers/AppError');
 
 async function getAll(req, res) {
   try {
-    const students = await studentsService.getAll();
+    const students = await studentsService.getAll(req.user.id);
     res.json(students);
   } catch (err) {
     handleError(res, err);
@@ -16,7 +16,7 @@ async function getAll(req, res) {
 
 async function getById(req, res) {
   try {
-    const student = await studentsService.getById(req.params.id);
+    const student = await studentsService.getById(req.params.id, req.user.id);
     res.json(student);
   } catch (err) {
     handleError(res, err);
@@ -25,7 +25,7 @@ async function getById(req, res) {
 
 async function create(req, res) {
   try {
-    const student = await studentsService.create(req.body);
+    const student = await studentsService.create(req.body, req.user.id);
     res.status(201).json(student);
   } catch (err) {
     handleError(res, err);
@@ -34,7 +34,7 @@ async function create(req, res) {
 
 async function update(req, res) {
   try {
-    const student = await studentsService.update(req.params.id, req.body);
+    const student = await studentsService.update(req.params.id, req.body, req.user.id);
     res.json(student);
   } catch (err) {
     handleError(res, err);
@@ -43,7 +43,7 @@ async function update(req, res) {
 
 async function remove(req, res) {
   try {
-    await studentsService.remove(req.params.id);
+    await studentsService.remove(req.params.id, req.user.id);
     res.json({ message: 'Alumno eliminado correctamente' });
   } catch (err) {
     handleError(res, err);
@@ -52,8 +52,26 @@ async function remove(req, res) {
 
 async function getAssignments(req, res) {
   try {
-    const assignments = await studentsService.getAssignments(req.params.id);
+    const assignments = await studentsService.getAssignments(req.params.id, req.user.id);
     res.json(assignments);
+  } catch (err) {
+    handleError(res, err);
+  }
+}
+
+async function createAccount(req, res) {
+  try {
+    const student = await studentsService.createAccount(req.params.id, req.body, req.user.id);
+    res.status(201).json(student);
+  } catch (err) {
+    handleError(res, err);
+  }
+}
+
+async function removeAccount(req, res) {
+  try {
+    const result = await studentsService.removeAccount(req.params.id, req.user.id);
+    res.json(result);
   } catch (err) {
     handleError(res, err);
   }
@@ -67,4 +85,4 @@ function handleError(res, err) {
   res.status(500).json({ error: 'Error interno del servidor' });
 }
 
-module.exports = { getAll, getById, create, update, remove, getAssignments };
+module.exports = { getAll, getById, create, update, remove, getAssignments, createAccount, removeAccount };

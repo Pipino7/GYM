@@ -7,7 +7,7 @@ const AppError = require('../helpers/AppError');
 
 async function getAll(req, res) {
   try {
-    const pautas = await pautasService.getAll();
+    const pautas = await pautasService.getAll(req.user.id);
     res.json(pautas);
   } catch (err) {
     handleError(res, err);
@@ -16,7 +16,7 @@ async function getAll(req, res) {
 
 async function getById(req, res) {
   try {
-    const pauta = await pautasService.getById(req.params.id);
+    const pauta = await pautasService.getById(req.params.id, req.user.id);
     res.json(pauta);
   } catch (err) {
     handleError(res, err);
@@ -25,7 +25,7 @@ async function getById(req, res) {
 
 async function create(req, res) {
   try {
-    const pauta = await pautasService.create(req.body);
+    const pauta = await pautasService.create(req.body, req.user.id);
     res.status(201).json(pauta);
   } catch (err) {
     handleError(res, err);
@@ -34,7 +34,7 @@ async function create(req, res) {
 
 async function update(req, res) {
   try {
-    const pauta = await pautasService.update(req.params.id, req.body);
+    const pauta = await pautasService.update(req.params.id, req.body, req.user.id);
     res.json(pauta);
   } catch (err) {
     handleError(res, err);
@@ -43,7 +43,7 @@ async function update(req, res) {
 
 async function remove(req, res) {
   try {
-    await pautasService.remove(req.params.id);
+    await pautasService.remove(req.params.id, req.user.id);
     res.json({ message: 'Pauta eliminada correctamente' });
   } catch (err) {
     handleError(res, err);

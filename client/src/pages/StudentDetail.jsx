@@ -13,6 +13,9 @@ import {
   FaClipboardList,
   FaChartLine,
   FaCheckCircle,
+  FaKey,
+  FaEnvelope,
+  FaUserSlash,
 } from 'react-icons/fa';
 import {
   getStudent,
@@ -23,6 +26,8 @@ import {
   deleteAssignment,
   downloadPDF,
   getStudentWorkoutLogs,
+  createStudentAccount,
+  removeStudentAccount,
 } from '../api/api';
 import ConfirmModal from '../components/ConfirmModal';
 
@@ -42,6 +47,12 @@ function StudentDetail() {
   const [assigning, setAssigning] = useState(false);
 
   const [deleteTarget, setDeleteTarget] = useState(null);
+
+  // Account form state
+  const [showAccountForm, setShowAccountForm] = useState(false);
+  const [accountForm, setAccountForm] = useState({ email: '', password: '' });
+  const [accountLoading, setAccountLoading] = useState(false);
+  const [deleteAccountTarget, setDeleteAccountTarget] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -139,6 +150,39 @@ function StudentDetail() {
     }
   };
 
+  const handleCreateAccount = async (e) => {
+    e.preventDefault();
+    if (!accountForm.email.trim() || !accountForm.password.trim()) {
+      toast.warning('Email y contraseña son requeridos');
+      return;
+    }
+    setAccountLoading(true);
+    try {
+      const { data: updatedStudent } = await createStudentAccount(id, accountForm);
+      setStudent(updatedStudent);
+      setShowAccountForm(false);
+      setAccountForm({ email: '', password: '' });
+      toast.success('Cuenta creada exitosamente. El alumno ya puede iniciar sesión.');
+    } catch (error) {
+      const msg = error.response?.data?.error || 'Error al crear la cuenta';
+      toast.error(msg);
+    } finally {
+      setAccountLoading(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      await removeStudentAccount(id);
+      setStudent({ ...student, usuario_id: null, usuario: null });
+      toast.success('Cuenta de acceso eliminada');
+    } catch (error) {
+      toast.error('Error al eliminar la cuenta');
+    } finally {
+      setDeleteAccountTarget(false);
+    }
+  };
+
   if (loading) {
     return <div className="loading">Cargando alumno...</div>;
   }
@@ -199,6 +243,96 @@ function StudentDetail() {
               <div className="detail-section__box">{student.goal}</div>
             </div>
           )}
+
+          {(student.peso_kg || student.estatura_cm) && (
+            <div className="detail-section">
+              <h3>Datos Físicos</h3>
+              <div className="detail-section__box">
+                {student.peso_kg && <span>Peso: {Number(student.peso_kg)} kg</span>}
+                {student.peso_kg && student.estatura_cm && ' — '}
+                {student.estatura_cm && <span>Estatura: {Number(student.estatura_cm)} cm</span>}
+              </div>
+            </div>
+          )}
+
+          {/* Cuenta de acceso */}
+          <div className="detail-section">
+            <h3><FaKey style={{ marginRight: '0.4rem', fontSize: '0.9rem' }} /> Cuenta de Acceso</h3>
+            {student.usuario ? (
+              <div className="detail-section__box account-info">
+                <div className="account-info__data">
+                  <FaEnvelope style={{ color: 'var(--info)', marginRight: '0.4rem' }} />
+                  <span>{student.usuario.email}</span>
+                  <span className="badge badge--success" style={{ marginLeft: '0.75rem' }}>Activa</span>
+                </div>
+                <button
+                  className="btn btn--danger btn--sm"
+                  onClick={() => setDeleteAccountTarget(true)}
+                  title="Eliminar cuenta"
+                >
+                  <FaUserSlash /> Eliminar cuenta
+                </button>
+              </div>
+            ) : (
+              <>
+                {!showAccountForm ? (
+                  <div className="detail-section__box" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ color: 'var(--text-light)' }}>Sin cuenta de acceso</span>
+                    <button
+                      className="btn btn--success btn--sm"
+                      onClick={() => {
+                        setAccountForm({ email: student.contact || '', password: '' });
+                        setShowAccountForm(true);
+                      }}
+                    >
+                      <FaKey /> Crear cuenta
+                    </button>
+                  </div>
+                ) : (
+                  <form className="account-form" onSubmit={handleCreateAccount}>
+                    <div className="form-row" style={{ alignItems: 'flex-end' }}>
+                      <div className="form-group" style={{ marginBottom: 0 }}>
+                        <label>Email (usuario) *</label>
+                        <input
+                          type="email"
+                          value={accountForm.email}
+                          onChange={(e) => setAccountForm({ ...accountForm, email: e.target.value })}
+                          placeholder="alumno@email.com"
+                          required
+                        />
+                      </div>
+                      <div className="form-group" style={{ marginBottom: 0 }}>
+                        <label>Contraseña *</label>
+                        <input
+                          type="text"
+                          value={accountForm.password}
+                          onChange={(e) => setAccountForm({ ...accountForm, password: e.target.value })}
+                          placeholder="Mínimo 6 caracteres"
+                          required
+                          minLength={6}
+                        />
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button type="submit" className="btn btn--success btn--sm" disabled={accountLoading}>
+                          {accountLoading ? 'Creando...' : 'Crear'}
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn--outline btn--sm"
+                          onClick={() => setShowAccountForm(false)}
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                    <p className="account-form__hint">
+                      El alumno podrá iniciar sesión con este email y contraseña para ver sus pautas y registrar su progreso.
+                    </p>
+                  </form>
+                )}
+              </>
+            )}
+          </div>
 
           <div className="detail-section">
             <p style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
@@ -365,6 +499,15 @@ function StudentDetail() {
           message="Esta acción eliminará la asignación de la pauta al alumno."
           onConfirm={handleDeleteAssignment}
           onCancel={() => setDeleteTarget(null)}
+        />
+      )}
+
+      {deleteAccountTarget && (
+        <ConfirmModal
+          title="¿Eliminar cuenta de acceso?"
+          message="El alumno ya no podrá iniciar sesión. Sus datos y registros se mantienen."
+          onConfirm={handleDeleteAccount}
+          onCancel={() => setDeleteAccountTarget(false)}
         />
       )}
 

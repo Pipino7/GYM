@@ -3,24 +3,32 @@ const AppError = require('../helpers/AppError');
 
 /**
  * Servicio de pautas — toda la lógica de negocio y validación.
+ * Todas las operaciones se filtran por profesor_id para multi-tenancy.
  */
 
-async function getAll() {
-  return prisma.pautas.findMany({ orderBy: { created_at: 'desc' } });
+async function getAll(profesorId) {
+  return prisma.pautas.findMany({
+    where: { profesor_id: Number(profesorId) },
+    orderBy: { created_at: 'desc' },
+  });
 }
 
-async function getById(id) {
-  const pauta = await prisma.pautas.findUnique({
-    where: { id: Number(id) },
+async function getById(id, profesorId) {
+  const where = { id: Number(id) };
+  if (profesorId) where.profesor_id = Number(profesorId);
+
+  const pauta = await prisma.pautas.findFirst({
+    where,
     include: { ejercicios: { orderBy: { orden: 'asc' } } },
   });
   if (!pauta) throw new AppError(404, 'Pauta no encontrada');
   return pauta;
 }
 
-async function create({ titulo, mes, anio, descripcion, calentamiento, ejercicios }) {
+async function create({ titulo, mes, anio, descripcion, calentamiento, ejercicios }, profesorId) {
   return prisma.pautas.create({
     data: {
+      profesor_id: Number(profesorId),
       titulo,
       mes,
       anio,
@@ -43,8 +51,8 @@ async function create({ titulo, mes, anio, descripcion, calentamiento, ejercicio
   });
 }
 
-async function update(id, { titulo, mes, anio, descripcion, calentamiento, ejercicios }) {
-  await getById(id);
+async function update(id, { titulo, mes, anio, descripcion, calentamiento, ejercicios }, profesorId) {
+  await getById(id, profesorId);
 
   return prisma.$transaction(async (tx) => {
     await tx.ejercicios.deleteMany({ where: { pauta_id: Number(id) } });
@@ -76,8 +84,8 @@ async function update(id, { titulo, mes, anio, descripcion, calentamiento, ejerc
   });
 }
 
-async function remove(id) {
-  await getById(id);
+async function remove(id, profesorId) {
+  await getById(id, profesorId);
   return prisma.pautas.delete({ where: { id: Number(id) } });
 }
 

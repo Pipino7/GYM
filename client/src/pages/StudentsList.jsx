@@ -76,6 +76,13 @@ function StudentsList() {
                 {student.goal && (
                   <p className="student-card__goal">{student.goal}</p>
                 )}
+                {(student.peso_kg || student.estatura_cm) && (
+                  <p className="student-card__contact" style={{ fontSize: '0.8rem' }}>
+                    {student.peso_kg && <span>{Number(student.peso_kg)} kg</span>}
+                    {student.peso_kg && student.estatura_cm && ' · '}
+                    {student.estatura_cm && <span>{Number(student.estatura_cm)} cm</span>}
+                  </p>
+                )}
                 <div className="student-card__meta">
                   <span className={`badge badge--${student.status === 'active' ? 'success' : 'muted'}`}>
                     {student.status === 'active' ? 'Activo' : student.status}

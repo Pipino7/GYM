@@ -5,3 +5,6 @@ dist/
 *.apk
 *.aab
 *.ipa
+
+# Docker
+postgres_data/

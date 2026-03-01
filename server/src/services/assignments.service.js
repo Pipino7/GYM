@@ -5,13 +5,13 @@ const AppError = require('../helpers/AppError');
  * Servicio de asignaciones — toda la lógica de negocio y validación.
  */
 
-async function create({ routineId, studentId, startsAt }) {
-  // Validar que la pauta existe
-  const pauta = await prisma.pautas.findUnique({ where: { id: Number(routineId) } });
+async function create({ routineId, studentId, startsAt }, profesorId) {
+  // Validar que la pauta existe y pertenece al profesor
+  const pauta = await prisma.pautas.findFirst({ where: { id: Number(routineId), profesor_id: Number(profesorId) } });
   if (!pauta) throw new AppError(404, 'La pauta seleccionada no existe');
 
-  // Validar que el alumno existe
-  const student = await prisma.students.findUnique({ where: { id: Number(studentId) } });
+  // Validar que el alumno existe y pertenece al profesor
+  const student = await prisma.students.findFirst({ where: { id: Number(studentId), profesor_id: Number(profesorId) } });
   if (!student) throw new AppError(404, 'El alumno seleccionado no existe');
 
   // Validar que no haya asignación activa duplicada
@@ -50,9 +50,9 @@ async function findActiveAssignment(routineId, studentId) {
   });
 }
 
-async function getByStudent(studentId) {
-  // Validar que el alumno existe
-  const student = await prisma.students.findUnique({ where: { id: Number(studentId) } });
+async function getByStudent(studentId, profesorId) {
+  // Validar que el alumno existe y pertenece al profesor
+  const student = await prisma.students.findFirst({ where: { id: Number(studentId), profesor_id: Number(profesorId) } });
   if (!student) throw new AppError(404, 'Alumno no encontrado');
 
   return prisma.routine_assignments.findMany({

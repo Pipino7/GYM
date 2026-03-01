@@ -6,6 +6,25 @@ const api = axios.create({
   baseURL: API_URL,
 });
 
+// Auto-attach token from localStorage on init
+const savedToken = localStorage.getItem('token');
+if (savedToken) {
+  api.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
+}
+
+// Interceptor: if 401, remove token (session expired)
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401 && window.location.pathname !== '/login') {
+      localStorage.removeItem('token');
+      delete api.defaults.headers.common['Authorization'];
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 // === PAUTAS ===
 export const getPautas = () => api.get('/pautas');
 export const getPauta = (id) => api.get(`/pautas/${id}`);
@@ -30,6 +49,16 @@ export const createStudent = (data) => api.post('/students', data);
 export const updateStudent = (id, data) => api.patch(`/students/${id}`, data);
 export const deleteStudent = (id) => api.delete(`/students/${id}`);
 export const getStudentAssignments = (id) => api.get(`/students/${id}/assignments`);
+
+// === STUDENT ACCOUNT (profesor crea cuenta para alumno) ===
+export const createStudentAccount = (studentId, data) => api.post(`/students/${studentId}/account`, data);
+export const removeStudentAccount = (studentId) => api.delete(`/students/${studentId}/account`);
+
+// === STUDENT DASHBOARD (alumno logueado) ===
+export const getMyProfile = () => api.get('/my/profile');
+export const getMyAssignments = () => api.get('/my/assignments');
+export const getMyWorkoutLogs = () => api.get('/my/workout-logs');
+export const getMyProgress = (exerciseId) => api.get(`/my/progress/${exerciseId}`);
 
 // === ASSIGNMENTS ===
 export const createAssignment = (data) => api.post('/assignments', data);
