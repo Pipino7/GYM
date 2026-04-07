@@ -18,13 +18,13 @@ function Navbar() {
         {!isAlumno && (
           <>
             <Link to="/" className={`navbar__link ${!isAlumnos ? 'navbar__link--active' : ''}`}>
-              <FaDumbbell /> Pautas
+              <FaDumbbell /> <span>Pautas</span>
             </Link>
             <Link to="/alumnos" className={`navbar__link ${isAlumnos ? 'navbar__link--active' : ''}`}>
-              <FaUsers /> Alumnos
+              <FaUsers /> <span>Alumnos</span>
             </Link>
             <Link to={isAlumnos ? '/alumnos/crear' : '/crear'} className="navbar__link navbar__link--cta">
-              <FaPlus /> {isAlumnos ? 'Nuevo Alumno' : 'Nueva Pauta'}
+              <FaPlus /> <span>{isAlumnos ? 'Nuevo Alumno' : 'Nueva Pauta'}</span>
             </Link>
           </>
         )}
