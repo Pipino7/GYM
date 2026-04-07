@@ -33,11 +33,29 @@ body {
   background-color: var(--bg);
   color: var(--text);
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent text size adjustment on mobile */
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+  /* Better touch target on mobile */
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Improve touch scrolling on iOS */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Better button tap behavior on mobile */
+button {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
 }
 
 /* ============ NAVBAR ============ */
@@ -451,6 +469,27 @@ a {
 /* ============ EJERCICIOS TABLE (DETAIL) ============ */
 .ejercicios-table-container {
   overflow-x: auto;
+  position: relative;
+}
+
+/* Add shadow hints for horizontal scrolling on mobile */
+.ejercicios-table-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.1), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+@media (max-width: 768px) {
+  .ejercicios-table-container::after {
+    opacity: 1;
+  }
 }
 
 .ejercicios-table {
@@ -1256,6 +1295,27 @@ a {
 
 .sets-table-wrap {
   overflow-x: auto;
+  position: relative;
+}
+
+/* Add shadow hints for horizontal scrolling on mobile */
+.sets-table-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.1), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+@media (max-width: 768px) {
+  .sets-table-wrap::after {
+    opacity: 1;
+  }
 }
 
 .sets-table {
